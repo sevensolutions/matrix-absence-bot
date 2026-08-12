@@ -1,0 +1,9 @@
+.claude/
+config.yaml
+crypto.db
+crypto.db-*
+state.json
+*.log
+/matrix-absence-bot
+/data
+/dist

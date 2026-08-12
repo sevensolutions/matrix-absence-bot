@@ -1,0 +1,7 @@
+.git
+config.yaml
+crypto.db
+crypto.db-*
+state.json
+matrix-absence-bot
+*.log

@@ -1,0 +1,30 @@
+# Copy this file to config.yaml and fill in your own values.
+# config.yaml is gitignored - it contains secrets, never commit it.
+
+homeserver: "https://matrix-client.matrix.org"
+user_id: "@bob:example.org"
+
+# Long-lived access token and matching device ID for a DEDICATED, FRESH
+# login session for the bot (not a token grabbed from an existing Element
+# session - see README.md for why, and exactly how to create one).
+access_token: "syt_..."
+device_id: "ABCDEFGH"
+
+# Local secret used to encrypt the crypto store on disk (crypto.db).
+# Generate one with: openssl rand -base64 32
+# Keep it stable across restarts - changing it makes crypto.db unreadable.
+pickle_key: "REPLACE_ME_WITH_A_RANDOM_SECRET"
+
+# Optional but recommended: your account's SSSS recovery key (the one shown
+# once when you set up Secure Backup / cross-signing). Without this, other
+# devices may never share encryption keys with the bot's device, and it may
+# never be able to decrypt messages in encrypted rooms. See README.md.
+recovery_key: ""
+
+# Where local state is stored. Both are gitignored.
+crypto_db_path: "crypto.db"
+state_path: "state.json"
+
+# The message sent back to each DM sender, at most once per day. Supports
+# placeholders: {firstName}, {displayName}, {username} - see README.md.
+reply_message: "Hello {firstName}, I'm currently away and will get back to you as soon as I can."

@@ -1,0 +1,12 @@
+services:
+  matrix-absence-bot:
+    build: .
+    # Or, once published: image: ghcr.io/you/matrix-absence-bot:latest
+    restart: unless-stopped
+    # Run as your own host user so files written into ./data (crypto.db,
+    # state.json) are writable/readable outside the container too.
+    # Override with `UID=$(id -u) GID=$(id -g) docker compose up` if the
+    # defaults below don't match your host user.
+    user: "${UID:-1000}:${GID:-1000}"
+    volumes:
+      - ./data:/data
