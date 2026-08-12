@@ -10,6 +10,7 @@ import (
 	"flag"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"syscall"
 
@@ -29,6 +30,10 @@ func main() {
 	cfg, err := LoadConfig(*configPath)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to load config")
+	}
+
+	if err := ensureParentDirs(cfg.CryptoDBPath, cfg.StatePath); err != nil {
+		log.Fatal().Err(err).Msg("Failed to create data directory")
 	}
 
 	client, err := mautrix.NewClient(cfg.Homeserver, id.UserID(cfg.UserID), cfg.AccessToken)
@@ -115,6 +120,23 @@ func main() {
 			log.Fatal().Err(err).Msg("Sync stopped unexpectedly")
 		}
 	}
+}
+
+// ensureParentDirs creates the parent directory of each given path if it
+// doesn't already exist, so a fresh deployment (e.g. an empty mounted
+// volume, or a data directory that was never created) doesn't fail just
+// because crypto.db/state.json have nowhere to go yet.
+func ensureParentDirs(paths ...string) error {
+	for _, p := range paths {
+		dir := filepath.Dir(p)
+		if dir == "." || dir == "" {
+			continue
+		}
+		if err := os.MkdirAll(dir, 0o700); err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 // verifyWithRecoveryKey uses the account's SSSS recovery key to cross-sign

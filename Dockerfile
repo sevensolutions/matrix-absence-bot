@@ -20,12 +20,16 @@ FROM alpine:3.22
 
 RUN apk add --no-cache ca-certificates \
     && addgroup -g 10001 bot \
-    && adduser -D -u 10001 -G bot -s /sbin/nologin bot
+    && adduser -D -u 10001 -G bot -s /sbin/nologin bot \
+    && mkdir -p /data \
+    && chown bot:bot /data
 
 COPY --from=builder /out/matrix-absence-bot /usr/local/bin/matrix-absence-bot
 
-# config.yaml, crypto.db and state.json all live here. Mount a host
-# directory here so state survives container restarts/rebuilds.
+# config.yaml, crypto.db and state.json all live here. Owned by bot (uid
+# 10001) so it's writable out of the box even if nothing is mounted here;
+# mount a host directory here so state survives container
+# restarts/rebuilds - if you do, make sure it's writable by uid 10001 too.
 WORKDIR /data
 VOLUME ["/data"]
 
