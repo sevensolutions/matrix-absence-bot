@@ -42,6 +42,11 @@ func main() {
 	}
 	client.DeviceID = id.DeviceID(cfg.DeviceID)
 	client.Log = log
+	// Sent as set_presence on every /sync request. Without this, the mere
+	// act of the bot polling /sync marks the account "online" on every
+	// request - regardless of the auto-reply - which is why presence would
+	// otherwise always show as available while the bot runs.
+	client.SyncPresence = event.Presence(cfg.Presence)
 
 	syncer := mautrix.NewDefaultSyncer()
 	client.Syncer = syncer

@@ -12,6 +12,9 @@ away, stop it (Ctrl-C) when you're back. That's the whole model.
 - Never replies to your own messages (including its own prior replies).
 - Sends at most one reply per sender per calendar day.
 - Supports end-to-end encrypted DMs (which is most of them, by default).
+- Also sets your Matrix presence (default: "unavailable"/"Away") for as long
+  as it runs, so you don't show as available just because the bot is
+  connected and polling `/sync`.
 
 ## 1. Create a dedicated login session for the bot
 
@@ -76,7 +79,8 @@ cp config.example.yaml config.yaml
 
 Fill in `homeserver`, `user_id`, `access_token`, `device_id`, `pickle_key`,
 and (recommended) `recovery_key`. Adjust `reply_message` to whatever you
-want people to see. `config.yaml` is gitignored - it holds secrets.
+want people to see, and `presence` if you don't want the default "Away"
+status (see below). `config.yaml` is gitignored - it holds secrets.
 
 ## 5. Build & run
 
@@ -175,6 +179,18 @@ Example: `"Hello {firstName}, I'm currently away and will get back to you as soo
 
 Falls back to the username wherever a display name isn't known yet (e.g. the
 bot hasn't seen their profile before their first message).
+
+## Presence
+
+Every `/sync` request a client makes tells the homeserver `set_presence`,
+and the Matrix spec's default for that is `online` - so a bot that's just
+connected and long-polling `/sync`, with no presence handling of its own,
+makes you show up as available to everyone the whole time it runs, no
+matter what the auto-reply says. This bot sets `presence` (default
+`"unavailable"`, shown as "Away" in most clients) on every sync request
+instead, so your status matches reality. Set it to `"offline"` to look
+fully offline, or `"online"` if you'd rather leave your real presence
+alone and rely on the auto-reply only.
 
 ## How "one reply per sender per day" works
 

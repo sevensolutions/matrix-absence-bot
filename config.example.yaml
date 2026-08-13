@@ -28,3 +28,11 @@ state_path: "state.json"
 # The message sent back to each DM sender, at most once per day. Supports
 # placeholders: {firstName}, {displayName}, {username} - see README.md.
 reply_message: "Hello {firstName}, I'm currently away and will get back to you as soon as I can."
+
+# Presence shown to others while the bot is running. One of "unavailable"
+# (shown as "Away" in most clients), "offline", or "online" (leaves your
+# real presence alone - use this if you only want the auto-reply and don't
+# want the bot to touch presence at all). Without this, simply polling
+# /sync marks you "online" on every request, so you'd always show as
+# available regardless of what the auto-reply says.
+presence: "unavailable"
